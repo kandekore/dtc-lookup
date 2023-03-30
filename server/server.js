@@ -4,7 +4,7 @@ const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 
 const { typeDefs, resolvers } = require('./schemas');
-const connectDB = require('./config/connection');
+const connectToMongoDB = require('./config/connection');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 
 async function startServer() {
   try {
-    await connectDB();
+    await connectToMongoDB();
 
     app.listen(PORT, () => {
       console.log('Server listening on port ' + PORT);
