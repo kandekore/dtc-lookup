@@ -25,6 +25,22 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
+async function startServer() {
+  try {
+    const db = await connectToMongoDB();
+
+    // Do something with the db object here, if needed.
+
+    app.listen(3000, () => {
+      console.log('Server listening on port 3000');
+    });
+  } catch (err) {
+    console.log(err);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async (typeDefs, resolvers) => {
