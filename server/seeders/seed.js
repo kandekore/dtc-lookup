@@ -1,17 +1,20 @@
-const db = require('../config/connection');
+const connectToMongoDB = require('../config/connection');
 const { Dtc } = require('../models');
-// const profileSeeds = require('./profileSeeds.json');
 const dtcSeeds = require('./gdxdtcs.json');
 
-
-db.once('open', async () => {
+const seedDatabase = async () => {
   try {
+    const db = await connectToMongoDB();
+
     await Dtc.deleteMany({});
     await Dtc.create(dtcSeeds);
 
-    console.log('all done!');
+    console.log('Seed data successfully added!');
     process.exit(0);
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    console.error('Error seeding database:', error);
+    process.exit(1);
   }
-});
+};
+
+seedDatabase();

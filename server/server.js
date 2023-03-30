@@ -2,9 +2,8 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
-
 const { typeDefs, resolvers } = require('./schemas');
-const connectToMongoDB = require('./config/connection');
+const { connectToMongoDB } = require('./config/connection');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -12,6 +11,13 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: authMiddleware,
+  cacheControl: {
+    defaultMaxAge: 3600, // cache for one hour by default
+  },
+  persistedQueries: {
+    cache: 'bounded',
+    ttl: 300, // cache persisted queries for 5 minutes
+  },
 });
 
 app.use(express.urlencoded({ extended: false }));
